@@ -1,0 +1,974 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOhVGOg+syaeuRZJ7uaJjWg"
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "bs0eMjfHhR1m",
+        "outputId": "09a81b7c-ed20-4d6f-83c4-3ab0cc49c90a"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Mounted at /content/drive\n"
+          ]
+        }
+      ],
+      "source": [
+        "import numpy as np\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "import seaborn as sns\n",
+        "import warnings\n",
+        "warnings.filterwarnings('ignore')\n",
+        "from google.colab import drive\n",
+        "drive.mount('/content/drive')"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "PlayTennis = pd.read_csv('/content/drive/MyDrive/Dataset/PlayTennis.csv')\n",
+        "PlayTennis"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 488
+        },
+        "id": "nsiTdDoOh1bn",
+        "outputId": "e959bb41-7d7e-4cf9-a86a-c4160a89497b"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "     outlook  temp humidity  windy play\n",
+              "0      sunny   hot     high  False   no\n",
+              "1      sunny   hot     high   True   no\n",
+              "2   overcast   hot     high  False  yes\n",
+              "3      rainy  mild     high  False  yes\n",
+              "4      rainy  cool   normal  False  yes\n",
+              "5      rainy  cool   normal   True   no\n",
+              "6   overcast  cool   normal   True  yes\n",
+              "7      sunny  mild     high  False   no\n",
+              "8      sunny  cool   normal  False  yes\n",
+              "9      rainy  mild   normal  False  yes\n",
+              "10     sunny  mild   normal   True  yes\n",
+              "11  overcast  mild     high   True  yes\n",
+              "12  overcast   hot   normal  False  yes\n",
+              "13     rainy  mild     high   True   no"
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-f58c1cbb-6c29-41b3-bd93-06b2a7869f03\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>outlook</th>\n",
+              "      <th>temp</th>\n",
+              "      <th>humidity</th>\n",
+              "      <th>windy</th>\n",
+              "      <th>play</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>sunny</td>\n",
+              "      <td>hot</td>\n",
+              "      <td>high</td>\n",
+              "      <td>False</td>\n",
+              "      <td>no</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>sunny</td>\n",
+              "      <td>hot</td>\n",
+              "      <td>high</td>\n",
+              "      <td>True</td>\n",
+              "      <td>no</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>overcast</td>\n",
+              "      <td>hot</td>\n",
+              "      <td>high</td>\n",
+              "      <td>False</td>\n",
+              "      <td>yes</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>rainy</td>\n",
+              "      <td>mild</td>\n",
+              "      <td>high</td>\n",
+              "      <td>False</td>\n",
+              "      <td>yes</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>rainy</td>\n",
+              "      <td>cool</td>\n",
+              "      <td>normal</td>\n",
+              "      <td>False</td>\n",
+              "      <td>yes</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>5</th>\n",
+              "      <td>rainy</td>\n",
+              "      <td>cool</td>\n",
+              "      <td>normal</td>\n",
+              "      <td>True</td>\n",
+              "      <td>no</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>6</th>\n",
+              "      <td>overcast</td>\n",
+              "      <td>cool</td>\n",
+              "      <td>normal</td>\n",
+              "      <td>True</td>\n",
+              "      <td>yes</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>7</th>\n",
+              "      <td>sunny</td>\n",
+              "      <td>mild</td>\n",
+              "      <td>high</td>\n",
+              "      <td>False</td>\n",
+              "      <td>no</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>8</th>\n",
+              "      <td>sunny</td>\n",
+              "      <td>cool</td>\n",
+              "      <td>normal</td>\n",
+              "      <td>False</td>\n",
+              "      <td>yes</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>9</th>\n",
+              "      <td>rainy</td>\n",
+              "      <td>mild</td>\n",
+              "      <td>normal</td>\n",
+              "      <td>False</td>\n",
+              "      <td>yes</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>10</th>\n",
+              "      <td>sunny</td>\n",
+              "      <td>mild</td>\n",
+              "      <td>normal</td>\n",
+              "      <td>True</td>\n",
+              "      <td>yes</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>11</th>\n",
+              "      <td>overcast</td>\n",
+              "      <td>mild</td>\n",
+              "      <td>high</td>\n",
+              "      <td>True</td>\n",
+              "      <td>yes</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>12</th>\n",
+              "      <td>overcast</td>\n",
+              "      <td>hot</td>\n",
+              "      <td>normal</td>\n",
+              "      <td>False</td>\n",
+              "      <td>yes</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>13</th>\n",
+              "      <td>rainy</td>\n",
+              "      <td>mild</td>\n",
+              "      <td>high</td>\n",
+              "      <td>True</td>\n",
+              "      <td>no</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-f58c1cbb-6c29-41b3-bd93-06b2a7869f03')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-f58c1cbb-6c29-41b3-bd93-06b2a7869f03 button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-f58c1cbb-6c29-41b3-bd93-06b2a7869f03');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "<div id=\"df-d941ad6a-9c9f-41c8-87b8-da47cb84e906\">\n",
+              "  <button class=\"colab-df-quickchart\" onclick=\"quickchart('df-d941ad6a-9c9f-41c8-87b8-da47cb84e906')\"\n",
+              "            title=\"Suggest charts\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\"viewBox=\"0 0 24 24\"\n",
+              "     width=\"24px\">\n",
+              "    <g>\n",
+              "        <path d=\"M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z\"/>\n",
+              "    </g>\n",
+              "</svg>\n",
+              "  </button>\n",
+              "\n",
+              "<style>\n",
+              "  .colab-df-quickchart {\n",
+              "      --bg-color: #E8F0FE;\n",
+              "      --fill-color: #1967D2;\n",
+              "      --hover-bg-color: #E2EBFA;\n",
+              "      --hover-fill-color: #174EA6;\n",
+              "      --disabled-fill-color: #AAA;\n",
+              "      --disabled-bg-color: #DDD;\n",
+              "  }\n",
+              "\n",
+              "  [theme=dark] .colab-df-quickchart {\n",
+              "      --bg-color: #3B4455;\n",
+              "      --fill-color: #D2E3FC;\n",
+              "      --hover-bg-color: #434B5C;\n",
+              "      --hover-fill-color: #FFFFFF;\n",
+              "      --disabled-bg-color: #3B4455;\n",
+              "      --disabled-fill-color: #666;\n",
+              "  }\n",
+              "\n",
+              "  .colab-df-quickchart {\n",
+              "    background-color: var(--bg-color);\n",
+              "    border: none;\n",
+              "    border-radius: 50%;\n",
+              "    cursor: pointer;\n",
+              "    display: none;\n",
+              "    fill: var(--fill-color);\n",
+              "    height: 32px;\n",
+              "    padding: 0;\n",
+              "    width: 32px;\n",
+              "  }\n",
+              "\n",
+              "  .colab-df-quickchart:hover {\n",
+              "    background-color: var(--hover-bg-color);\n",
+              "    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "    fill: var(--button-hover-fill-color);\n",
+              "  }\n",
+              "\n",
+              "  .colab-df-quickchart-complete:disabled,\n",
+              "  .colab-df-quickchart-complete:disabled:hover {\n",
+              "    background-color: var(--disabled-bg-color);\n",
+              "    fill: var(--disabled-fill-color);\n",
+              "    box-shadow: none;\n",
+              "  }\n",
+              "\n",
+              "  .colab-df-spinner {\n",
+              "    border: 2px solid var(--fill-color);\n",
+              "    border-color: transparent;\n",
+              "    border-bottom-color: var(--fill-color);\n",
+              "    animation:\n",
+              "      spin 1s steps(1) infinite;\n",
+              "  }\n",
+              "\n",
+              "  @keyframes spin {\n",
+              "    0% {\n",
+              "      border-color: transparent;\n",
+              "      border-bottom-color: var(--fill-color);\n",
+              "      border-left-color: var(--fill-color);\n",
+              "    }\n",
+              "    20% {\n",
+              "      border-color: transparent;\n",
+              "      border-left-color: var(--fill-color);\n",
+              "      border-top-color: var(--fill-color);\n",
+              "    }\n",
+              "    30% {\n",
+              "      border-color: transparent;\n",
+              "      border-left-color: var(--fill-color);\n",
+              "      border-top-color: var(--fill-color);\n",
+              "      border-right-color: var(--fill-color);\n",
+              "    }\n",
+              "    40% {\n",
+              "      border-color: transparent;\n",
+              "      border-right-color: var(--fill-color);\n",
+              "      border-top-color: var(--fill-color);\n",
+              "    }\n",
+              "    60% {\n",
+              "      border-color: transparent;\n",
+              "      border-right-color: var(--fill-color);\n",
+              "    }\n",
+              "    80% {\n",
+              "      border-color: transparent;\n",
+              "      border-right-color: var(--fill-color);\n",
+              "      border-bottom-color: var(--fill-color);\n",
+              "    }\n",
+              "    90% {\n",
+              "      border-color: transparent;\n",
+              "      border-bottom-color: var(--fill-color);\n",
+              "    }\n",
+              "  }\n",
+              "</style>\n",
+              "\n",
+              "  <script>\n",
+              "    async function quickchart(key) {\n",
+              "      const quickchartButtonEl =\n",
+              "        document.querySelector('#' + key + ' button');\n",
+              "      quickchartButtonEl.disabled = true;  // To prevent multiple clicks.\n",
+              "      quickchartButtonEl.classList.add('colab-df-spinner');\n",
+              "      try {\n",
+              "        const charts = await google.colab.kernel.invokeFunction(\n",
+              "            'suggestCharts', [key], {});\n",
+              "      } catch (error) {\n",
+              "        console.error('Error during call to suggestCharts:', error);\n",
+              "      }\n",
+              "      quickchartButtonEl.classList.remove('colab-df-spinner');\n",
+              "      quickchartButtonEl.classList.add('colab-df-quickchart-complete');\n",
+              "    }\n",
+              "    (() => {\n",
+              "      let quickchartButtonEl =\n",
+              "        document.querySelector('#df-d941ad6a-9c9f-41c8-87b8-da47cb84e906 button');\n",
+              "      quickchartButtonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "    })();\n",
+              "  </script>\n",
+              "</div>\n",
+              "\n",
+              "  <div id=\"id_a205bb2e-35e2-442f-a62d-9dc68b766bf1\">\n",
+              "    <style>\n",
+              "      .colab-df-generate {\n",
+              "        background-color: #E8F0FE;\n",
+              "        border: none;\n",
+              "        border-radius: 50%;\n",
+              "        cursor: pointer;\n",
+              "        display: none;\n",
+              "        fill: #1967D2;\n",
+              "        height: 32px;\n",
+              "        padding: 0 0 0 0;\n",
+              "        width: 32px;\n",
+              "      }\n",
+              "\n",
+              "      .colab-df-generate:hover {\n",
+              "        background-color: #E2EBFA;\n",
+              "        box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "        fill: #174EA6;\n",
+              "      }\n",
+              "\n",
+              "      [theme=dark] .colab-df-generate {\n",
+              "        background-color: #3B4455;\n",
+              "        fill: #D2E3FC;\n",
+              "      }\n",
+              "\n",
+              "      [theme=dark] .colab-df-generate:hover {\n",
+              "        background-color: #434B5C;\n",
+              "        box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "        filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "        fill: #FFFFFF;\n",
+              "      }\n",
+              "    </style>\n",
+              "    <button class=\"colab-df-generate\" onclick=\"generateWithVariable('PlayTennis')\"\n",
+              "            title=\"Generate code using this dataframe.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\"viewBox=\"0 0 24 24\"\n",
+              "       width=\"24px\">\n",
+              "    <path d=\"M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "    <script>\n",
+              "      (() => {\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#id_a205bb2e-35e2-442f-a62d-9dc68b766bf1 button.colab-df-generate');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      buttonEl.onclick = () => {\n",
+              "        google.colab.notebook.generateWithVariable('PlayTennis');\n",
+              "      }\n",
+              "      })();\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "variable_name": "PlayTennis",
+              "summary": "{\n  \"name\": \"PlayTennis\",\n  \"rows\": 14,\n  \"fields\": [\n    {\n      \"column\": \"outlook\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 3,\n        \"samples\": [\n          \"sunny\",\n          \"overcast\",\n          \"rainy\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"temp\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 3,\n        \"samples\": [\n          \"hot\",\n          \"mild\",\n          \"cool\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"humidity\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"normal\",\n          \"high\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"windy\",\n      \"properties\": {\n        \"dtype\": \"boolean\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          true,\n          false\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"play\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"yes\",\n          \"no\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    }\n  ]\n}"
+            }
+          },
+          "metadata": {},
+          "execution_count": 3
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "PlayTennis.isnull().sum()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 241
+        },
+        "id": "VlNRlLcAiYnM",
+        "outputId": "04399da7-adde-4acf-b4d3-f32bd9b57314"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "outlook     0\n",
+              "temp        0\n",
+              "humidity    0\n",
+              "windy       0\n",
+              "play        0\n",
+              "dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>0</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>outlook</th>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>temp</th>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>humidity</th>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>windy</th>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>play</th>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 4
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "PlayTennis['humidity'].hist()\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 448
+        },
+        "id": "5PACToIAicv4",
+        "outputId": "661519c5-bb78-4de0-ed09-9c7944fbb78d"
+      },
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "<Axes: >"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 7
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<Figure size 640x480 with 1 Axes>"
+            ],
+            "image/png": "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5t5/+/3vf59FRPbQQw9lWZZl119/fVYsFrOtW7f2WSMisk984hO9j1etWpVFRPaNb3yj99j3vve9bPTo0c873+mnn5596Utf6n08adKk7Atf+EKu1/iCvYMxffr0Po8nTpwYW7du7Xfeo48+GtOnT++9PRQRcdZZZ+13zYkTJ0ZE7HNNAKi3gfa5jRs3Rmtra7S2tvb+25QpU+LII4+MjRs39h6bNGlSTJgw4XnX3fszHtOmTetz7D//+U+Uy+WI+O8djKuvvjomT54cRx55ZBx++OGxcePGA76D8YL9kmexWOzzuFAoRK1WS7ZmoVCIiDjgNQFgKA50nzvssMP2u+7eve759r+rr746urq64nOf+1yceuqpMWbMmHj7298eu3fvHvQs+/KCvYMxWK94xSvikUceiUql0ntszZo1wzgRAAzd5MmTY8uWLbFly5beY3/4wx9i+/btMWXKlOTX+/Wvfx3vete74m1ve1tMmzYtjjvuuHjiiScOeN2GD4x58+ZFrVaL973vfbFx48ZYvnx5fO5zn4uI/6s0AGgUs2fPjmnTpsVll10WDz/8cDz00ENx+eWXx7nnnhttbW3Jr/eyl72s94uiv/vd73r31QPV8IHR0tISP/vZz2L9+vUxY8aM+PjHPx7XXXddRESf72UAQCMoFArxk5/8JMaNGxfnnHNOzJ49O0455ZS4/fbb63K9m266KcaNGxdnn312zJ07N+bMmROvfvWrD3jdQ/Ln2r/73e/GlVdeGd3d3TFmzJjhHgcAXnResF/yzOPb3/52nHLKKfGSl7wkfve738U111wTl1xyibgAgGFySATG008/Hdddd108/fTTMXHixLj44ovjhhtuGO6xAOBF65D8iAQAGF4N/yVPAOCFR2AAAMkJDAAgOYEBACQnMACA5AQGAJCcwAAAkhMYAEByAgMASO7/AymAadb2v+QhAAAAAElFTkSuQmCC\n"
+          },
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(PlayTennis['windy'].unique())\n",
+        "print(PlayTennis['play'].unique())\n",
+        "print(PlayTennis['outlook'].unique())\n",
+        "print(PlayTennis['temp'].unique())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "VKnrVI54i3Vc",
+        "outputId": "35fcb19b-4d7b-4dc6-be9e-38b48d198211"
+      },
+      "execution_count": 14,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "[False  True]\n",
+            "['no' 'yes']\n",
+            "['sunny' 'overcast' 'rainy']\n",
+            "['hot' 'mild' 'cool']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.preprocessing import LabelEncoder\n",
+        "Le = LabelEncoder() #each categorical value is assigned a numerical value(0,1,2...)\n",
+        "PlayTennis['outlook'] = Le.fit_transform(PlayTennis['outlook'])\n",
+        "PlayTennis['temp'] = Le.fit_transform(PlayTennis['temp'])\n",
+        "PlayTennis['humidity'] = Le.fit_transform(PlayTennis['humidity'])\n",
+        "PlayTennis['windy'] = Le.fit_transform(PlayTennis['windy'])\n",
+        "PlayTennis['play'] = Le.fit_transform(PlayTennis['play'])"
+      ],
+      "metadata": {
+        "id": "b37yK0FEjCqm"
+      },
+      "execution_count": 17,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(PlayTennis['windy'].unique())\n",
+        "print(PlayTennis['play'].unique())\n",
+        "print(PlayTennis['outlook'].unique())\n",
+        "print(PlayTennis['temp'].unique())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "ePtebYDzjuWi",
+        "outputId": "94a7bffd-8dad-495f-b1aa-d62e1803cdca"
+      },
+      "execution_count": 18,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "[0 1]\n",
+            "[0 1]\n",
+            "[2 0 1]\n",
+            "[1 2 0]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "PlayTennis['outlook'].value_counts()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 209
+        },
+        "id": "WNSVF6M-kTZJ",
+        "outputId": "a6af418d-17c4-4ed3-8482-9703df7fddf6"
+      },
+      "execution_count": 19,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "outlook\n",
+              "2    5\n",
+              "1    5\n",
+              "0    4\n",
+              "Name: count, dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>count</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>outlook</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>5</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>5</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>4</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 19
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "PlayTennis['temp'].value_counts()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 209
+        },
+        "id": "K7nOBvw6kbQe",
+        "outputId": "7d41e4e6-b881-450d-ea5b-a093b2f242da"
+      },
+      "execution_count": 20,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "temp\n",
+              "2    6\n",
+              "1    4\n",
+              "0    4\n",
+              "Name: count, dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>count</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>temp</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>6</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>4</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>4</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 20
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "y = PlayTennis['play']  # decision column\n",
+        "x = PlayTennis.drop(['play'],axis=1) # dropping decision column\n"
+      ],
+      "metadata": {
+        "id": "ERr0ZUcJkmXh"
+      },
+      "execution_count": 21,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.model_selection import train_test_split\n",
+        "x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=42)"
+      ],
+      "metadata": {
+        "id": "xLk8ourZkzm4"
+      },
+      "execution_count": 22,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.tree import DecisionTreeClassifier\n",
+        "from sklearn import metrics\n"
+      ],
+      "metadata": {
+        "id": "4m72P18Vk_mr"
+      },
+      "execution_count": 24,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#building decision tree\n",
+        "clf=DecisionTreeClassifier()\n",
+        "clf=clf.fit(x_train,y_train)\n",
+        "y_pred=clf.predict(x_test)"
+      ],
+      "metadata": {
+        "id": "LrjB3uXklEph"
+      },
+      "execution_count": 25,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"Accuracy:\", metrics.accuracy_score(y_test,y_pred))\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "QL0lctzAlneX",
+        "outputId": "f7afa602-1a7d-43cf-9a02-abe7b59d6e18"
+      },
+      "execution_count": 27,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Accuracy: 1.0\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def predict_play():\n",
+        "    Le = LabelEncoder()\n",
+        "\n",
+        "\n",
+        "    outlook = input(\"Enter the outlook (sunny, overcast, rainy): \")\n",
+        "    temp = input(\"Enter the temperature (hot, mild, cool): \")\n",
+        "    humidity = input(\"Enter the humidity (high, normal): \")\n",
+        "    windy = input(\"Is it windy? (True, False): \")\n",
+        "\n",
+        "\n",
+        "    windy = True if windy.lower() == 'true' else False\n",
+        "\n",
+        "\n",
+        "    user_input = pd.DataFrame({'outlook': [outlook],\n",
+        "                               'temp': [temp],\n",
+        "                               'humidity': [humidity],\n",
+        "                               'windy': [windy]})\n",
+        "    for column in x.columns:\n",
+        "        user_input[column] = Le.fit_transform(user_input[column])\n",
+        "\n",
+        "\n",
+        "    prediction = clf.predict(user_input)\n",
+        "\n",
+        "\n",
+        "    prediction = \"yes\" if prediction[0] == 1 else \"no\"\n",
+        "\n",
+        "\n",
+        "    print(\"Based on the conditions, should you play tennis?\", prediction)\n",
+        "\n",
+        "\n",
+        "predict_play()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "alBFY9bhlrh7",
+        "outputId": "5133dff9-6533-4b5d-983f-610252640484"
+      },
+      "execution_count": 28,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter the outlook (sunny, overcast, rainy): sunny\n",
+            "Enter the temperature (hot, mild, cool): hot\n",
+            "Enter the humidity (high, normal): normal\n",
+            "Is it windy? (True, False): True\n",
+            "Based on the conditions, should you play tennis? yes\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
